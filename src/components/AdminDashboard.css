@@ -1,0 +1,440 @@
+.admin-dashboard {
+    min-height: 100vh;
+    background: #000000;
+}
+
+.admin-header {
+    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-header h1 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 700;
+}
+
+.logout-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: white;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.admin-main {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+}
+
+.dashboard-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-header h2 {
+    font-size: 22px;
+    color: #222;
+    margin: 0;
+    font-weight: 700;
+}
+
+.add-club-btn {
+    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.add-club-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+}
+
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.club-card {
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.club-card:hover {
+    border-color: #d32f2f;
+    box-shadow: 0 8px 25px rgba(211, 47, 47, 0.15);
+    transform: translateY(-5px);
+}
+
+.club-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+}
+
+.club-header h3 {
+    font-size: 18px;
+    color: #222;
+    margin: 0;
+    font-weight: 700;
+    flex: 1;
+}
+
+.club-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.rename-btn {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.rename-btn:hover {
+    background: #1976d2;
+    color: white;
+    transform: scale(1.1);
+}
+
+.delete-btn {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #c62828;
+    color: white;
+}
+
+.rename-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.rename-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #d32f2f;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.2s ease;
+}
+
+.rename-input:focus {
+    outline: none;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.save-rename-btn {
+    background: #4caf50;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.save-rename-btn:hover {
+    background: #45a049;
+    transform: scale(1.1);
+}
+
+.cancel-rename-btn {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cancel-rename-btn:hover {
+    background: #c62828;
+    color: white;
+}
+
+.club-info {
+    flex: 1;
+    margin-bottom: 15px;
+}
+
+.club-info p {
+    margin: 12px 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.club-category {
+    font-weight: 600;
+    color: #333;
+}
+
+.club-url a {
+    color: #d32f2f;
+    text-decoration: none;
+    word-break: break-all;
+    transition: all 0.2s ease;
+}
+
+.club-url a:hover {
+    text-decoration: underline;
+}
+
+.club-description {
+    color: #777;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.club-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    font-size: 12px;
+    color: #999;
+}
+
+.status-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.added-date {
+    font-size: 11px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.empty-state p:first-child {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.empty-hint {
+    font-size: 14px;
+    color: #666;
+}
+
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-section h2 {
+    font-size: 18px;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.info-box {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 13px;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #333;
+    font-weight: 600;
+}
+
+.status-active {
+    color: #2e7d32;
+    background: #e8f5e9;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.help-section {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #1976d2;
+}
+
+.help-section h3 {
+    margin: 0 0 12px;
+    color: #1565c0;
+    font-size: 14px;
+}
+
+.help-list {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.help-list li {
+    color: #555;
+    font-size: 12px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+    .admin-main {
+        grid-template-columns: 1fr;
+    }
+
+    .clubs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .admin-container {
+        padding: 20px 15px;
+    }
+
+    .dashboard-section {
+        padding: 20px;
+    }
+
+    .clubs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .add-club-btn {
+        width: 100%;
+    }
+}

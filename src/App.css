@@ -1,0 +1,250 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000000;
+    color: #333;
+    line-height: 1.6;
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px 20px;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: white;
+    gap: 20px;
+}
+
+.spinner {
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.no-events {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 15px;
+    color: #666;
+    font-size: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Sections */
+section {
+    scroll-margin-top: 80px;
+}
+
+.home-section {
+    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-hero {
+    max-width: 800px;
+}
+
+.home-hero h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.home-hero p {
+    font-size: 20px;
+    opacity: 0.95;
+}
+
+.events-section {
+    background: white;
+    padding: 40px 20px;
+}
+
+.clubs-section {
+    background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+    padding: 60px 20px;
+}
+
+.clubs-section .section-header {
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.section-header h2 {
+    font-size: 36px;
+    color: #222;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.section-header p {
+    font-size: 16px;
+    color: #666;
+}
+
+.clubs-list {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.clubs-grid-simple {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.club-item {
+    background: white;
+    border: 2px solid #d32f2f;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.club-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(211, 47, 47, 0.15);
+    border-color: #c62828;
+}
+
+.club-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+}
+
+.no-clubs {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}
+
+.about-section {
+    background: white;
+    padding: 60px 20px;
+}
+
+.about-section .section-header {
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.about-item {
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border-left: 4px solid #d32f2f;
+    transition: all 0.3s ease;
+}
+
+.about-item:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.about-item h3 {
+    font-size: 20px;
+    color: #222;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.about-item p,
+.about-item li {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.8;
+}
+
+.about-item ul,
+.about-item ol {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.about-item li {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .events-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .main-content {
+        padding: 20px 15px;
+    }
+}
