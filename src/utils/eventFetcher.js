@@ -3,30 +3,34 @@
  * Handles fetching events from registered club websites
  */
 
-// This simulates fetching events from club websites
-// In production, you would use a backend service to scrape or fetch actual events
+// Backend server URL (change this to your deployed server)
+const BACKEND_URL = 'http://localhost:5000';
 
-export const fetchEventsFromClub = async (clubWebsite) => {
+export const fetchEventsFromClub = async (clubWebsite, clubName) => {
     try {
-        // Try to fetch from club's /api/events endpoint
-        const response = await fetch(`${clubWebsite}/api/events`, {
-            method: 'GET',
+        // Try to fetch from backend server
+        const response = await fetch(`${BACKEND_URL}/api/fetch-events`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            mode: 'no-cors' // To avoid CORS issues in demo
-        })
+            body: JSON.stringify({
+                clubUrl: clubWebsite,
+                clubName: clubName
+            })
+        });
 
         if (response.ok) {
-            const data = await response.json()
-            return Array.isArray(data) ? data : (data.events || [])
+            const data = await response.json();
+            console.log(`✓ Fetched ${data.count} events from ${clubName}`);
+            return data.events || [];
         }
     } catch (error) {
-        console.warn(`Failed to fetch from ${clubWebsite}:`, error)
+        console.warn(`Failed to fetch from backend for ${clubName}:`, error);
     }
 
     // Fallback: return empty array
-    return []
+    return [];
 }
 
 export const fetchEventsFromAllClubs = async (clubs) => {

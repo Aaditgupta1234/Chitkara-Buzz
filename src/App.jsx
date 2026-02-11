@@ -7,7 +7,6 @@ import FilterBar from './components/FilterBar'
 import EventModal from './components/EventModal'
 import AdminLogin from './components/AdminLogin'
 import AdminDashboard from './components/AdminDashboard'
-import { generateDemoEventsForClub } from './utils/eventFetcher'
 
 function App() {
   // Admin state
@@ -38,161 +37,71 @@ function App() {
       setRegisteredClubs(clubs)
       fetchEventsFromRegisteredClubs(clubs)
     } else {
-      // Use default mock events if no clubs registered
-      loadDefaultMockEvents()
+      // No clubs registered - show empty state
+      setEvents([])
+      setFilteredEvents([])
+      setLoading(false)
     }
   }, [])
 
-  const loadDefaultMockEvents = () => {
-    const mockEvents = [
-      {
-        id: 1,
-        title: 'Code Crusaders Hackathon 2026',
-        club: 'Code Crusaders',
-        category: 'Technical',
-        date: '2026-02-20',
-        time: '10:00 AM',
-        location: 'Main Auditorium',
-        banner: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=250&fit=crop',
-        description: 'Join us for an exciting 24-hour hackathon featuring amazing prizes and networking opportunities.',
-        registrationLink: 'https://example.com/register-hackathon',
-        capacity: 150,
-        registered: 89,
-        clubWebsite: '#'
-      },
-      {
-        id: 2,
-        title: 'Business Club Investment Summit',
-        club: 'Business Club',
-        category: 'Business',
-        date: '2026-02-22',
-        time: '2:00 PM',
-        location: 'Conference Room A',
-        banner: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop',
-        description: 'Learn about investment strategies from industry experts. Perfect for aspiring entrepreneurs.',
-        registrationLink: 'https://example.com/register-summit',
-        capacity: 100,
-        registered: 67,
-        clubWebsite: '#'
-      },
-      {
-        id: 3,
-        title: 'Cultural Fest: Colors of India',
-        club: 'Cultural Club',
-        category: 'Cultural',
-        date: '2026-02-25',
-        time: '6:00 PM',
-        location: 'Open Ground',
-        banner: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop',
-        description: 'Celebrate the vibrant culture with traditional dance, music, and food.',
-        registrationLink: 'https://example.com/register-culturalfest',
-        capacity: 500,
-        registered: 234,
-        clubWebsite: '#'
-      },
-      {
-        id: 4,
-        title: 'Sports Tournament: Cricket League',
-        club: 'Sports Club',
-        category: 'Sports',
-        date: '2026-03-01',
-        time: '3:00 PM',
-        location: 'Cricket Ground',
-        banner: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&h=250&fit=crop',
-        description: 'Compete with teams from different departments. Registration open for all teams.',
-        registrationLink: 'https://example.com/register-cricket',
-        capacity: 200,
-        registered: 142,
-        clubWebsite: '#'
-      },
-      {
-        id: 5,
-        title: 'Art Exhibition: Student Showcase',
-        club: 'Art & Design Club',
-        category: 'Arts',
-        date: '2026-02-28',
-        time: '5:30 PM',
-        location: 'Central Gallery',
-        banner: 'https://images.unsplash.com/photo-1460661152884-922fd5212272?w=400&h=250&fit=crop',
-        description: 'Witness amazing artworks created by talented students from various disciplines.',
-        registrationLink: 'https://example.com/register-artexhibition',
-        capacity: 300,
-        registered: 189,
-        clubWebsite: '#'
-      },
-      {
-        id: 6,
-        title: 'Tech Talk: AI & Machine Learning',
-        club: 'Tech Innovation Club',
-        category: 'Technical',
-        date: '2026-03-05',
-        time: '11:00 AM',
-        location: 'Seminar Hall B',
-        banner: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop',
-        description: 'Industry expert sharing insights on the future of AI and ML in tech.',
-        registrationLink: 'https://example.com/register-techtalk',
-        capacity: 120,
-        registered: 98,
-        clubWebsite: '#'
-      },
-      {
-        id: 7,
-        title: 'Debate Championship',
-        club: 'Debate Society',
-        category: 'Competition',
-        date: '2026-03-08',
-        time: '1:00 PM',
-        location: 'Main Hall',
-        banner: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop',
-        description: 'Annual inter-college debate competition. Topics will be announced a week before.',
-        registrationLink: 'https://example.com/register-debate',
-        capacity: 80,
-        registered: 56,
-        clubWebsite: '#'
-      },
-      {
-        id: 8,
-        title: 'Startup Pitch Night',
-        club: 'Entrepreneurship Club',
-        category: 'Business',
-        date: '2026-03-12',
-        time: '7:00 PM',
-        location: 'Innovation Hub',
-        banner: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop',
-        description: 'Pitch your startup ideas to investors and get funding opportunities.',
-        registrationLink: 'https://example.com/register-startup',
-        capacity: 150,
-        registered: 102,
-        clubWebsite: '#'
-      },
-    ]
-
-    setEvents(mockEvents)
-    setFilteredEvents(mockEvents)
-    setLoading(false)
-  }
-
   const fetchEventsFromRegisteredClubs = async (clubs) => {
     setLoading(true)
+    console.log('📡 Fetching events from registered clubs:', clubs)
+    
     try {
       const allEvents = []
 
-      // Generate demo events for each registered club
+      // Fetch events from each registered club
       for (const club of clubs) {
-        const clubEvents = generateDemoEventsForClub(club)
-        allEvents.push(...clubEvents)
+        try {
+          console.log(`🔍 Fetching events for ${club.name} from ${club.website}`)
+          
+          // Use the backend server to fetch real events
+          const response = await fetch('http://localhost:5000/api/fetch-events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              clubUrl: club.website,
+              clubName: club.name
+            })
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            console.log(`✅ Fetched ${data.events?.length || 0} events from ${club.name}:`, data)
+            allEvents.push(...(data.events || []))
+          } else {
+            console.error(`❌ Failed to fetch from ${club.name}, status: ${response.status}`)
+          }
+        } catch (error) {
+          console.warn(`⚠️ Error fetching from ${club.name}:`, error.message)
+        }
       }
 
-      if (allEvents.length === 0) {
-        loadDefaultMockEvents()
-      } else {
-        setEvents(allEvents)
-        setFilteredEvents(allEvents)
-        setLoading(false)
+      // Load manually added events from localStorage
+      const manualEventsStr = localStorage.getItem('manualEvents')
+      if (manualEventsStr) {
+        try {
+          const manualEvents = JSON.parse(manualEventsStr)
+          console.log(`✏️ Loaded ${manualEvents.length} manually added events`)
+          allEvents.push(...manualEvents)
+        } catch (e) {
+          console.error('Failed to parse manual events:', e)
+        }
       }
+
+      console.log(`📊 Total events collected: ${allEvents.length}`)
+
+      setEvents(allEvents)
+      setFilteredEvents(allEvents)
+      setLoading(false)
     } catch (error) {
-      console.error('Error fetching events:', error)
-      loadDefaultMockEvents()
+      console.error('💥 Error fetching events:', error)
+      setEvents([])
+      setFilteredEvents([])
+      setLoading(false)
     }
   }
 
@@ -313,11 +222,12 @@ function App() {
           <p>All clubs participating in Chitkara Buzz</p>
         </div>
         <div className="clubs-list">
-          {uniqueClubs.length > 0 ? (
+          {registeredClubs.length > 0 ? (
             <div className="clubs-grid-simple">
-              {uniqueClubs.map((club) => (
-                <div key={club} className="club-item">
-                  <div className="club-name">📚 {club}</div>
+              {registeredClubs.map((club) => (
+                <div key={club.id} className="club-item">
+                  <div className="club-name">📚 {club.name}</div>
+                  <div className="club-category">{club.category}</div>
                 </div>
               ))}
             </div>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import './AdminDashboard.css'
 import AddClubForm from './AddClubForm'
+import AddEventForm from './AddEventForm'
 
 function AdminDashboard({ onLogout, onClubsUpdate }) {
   const [clubs, setClubs] = useState([])
-  const [showAddForm, setShowAddForm] = useState(false)
+  const [showAddClubForm, setShowAddClubForm] = useState(false)
+  const [showAddEventForm, setShowAddEventForm] = useState(false)
   const [loading, setLoading] = useState(true)
   const [editingClubId, setEditingClubId] = useState(null)
   const [editingName, setEditingName] = useState('')
@@ -23,14 +25,37 @@ function AdminDashboard({ onLogout, onClubsUpdate }) {
     setClubs(updatedClubs)
     localStorage.setItem('registeredClubs', JSON.stringify(updatedClubs))
     onClubsUpdate(updatedClubs)
-    setShowAddForm(false)
+    setShowAddClubForm(false)
+  }
+
+  const handleAddEvent = (newEvent) => {
+    // Get existing events from localStorage
+    const savedEvents = localStorage.getItem('manualEvents')
+    const existingEvents = savedEvents ? JSON.parse(savedEvents) : []
+    
+    // Add new event
+    const updatedEvents = [...existingEvents, newEvent]
+    localStorage.setItem('manualEvents', JSON.stringify(updatedEvents))
+    
+    // Trigger update
+    onClubsUpdate(clubs) // This will trigger a re-fetch
+    setShowAddEventForm(false)
   }
 
   const handleDeleteClub = (clubId) => {
-    const updatedClubs = clubs.filter(club => club.id !== clubId)
-    setClubs(updatedClubs)
-    localStorage.setItem('registeredClubs', JSON.stringify(updatedClubs))
-    onClubsUpdate(updatedClubs)
+    const clubToDelete = clubs.find(club => club.id === clubId)
+    const clubName = clubToDelete?.name || 'this club'
+    
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${clubName}"?\n\nThis will remove the club and all its events from the platform.`
+    )
+    
+    if (confirmed) {
+      const updatedClubs = clubs.filter(club => club.id !== clubId)
+      setClubs(updatedClubs)
+      localStorage.setItem('registeredClubs', JSON.stringify(updatedClubs))
+      onClubsUpdate(updatedClubs)
+    }
   }
 
   const handleRenameClick = (club) => {
@@ -75,21 +100,55 @@ function AdminDashboard({ onLogout, onClubsUpdate }) {
 
       <div className="admin-container">
         <div className="admin-main">
+          {/* Manual Events Section */}
+          <div className="dashboard-section">
+            <div className="section-header">
+              <h2>📅 Manual Events</h2>
+              <button
+                onClick={() => {
+                  setShowAddEventForm(!showAddEventForm)
+                  setShowAddClubForm(false)
+                }}
+                className="add-club-btn"
+              >
+                {showAddEventForm ? '✕ Cancel' : '+ Add New Event'}
+              </button>
+            </div>
+
+            {showAddEventForm && clubs.length > 0 && (
+              <AddEventForm
+                clubs={clubs}
+                onAddEvent={handleAddEvent}
+                onCancel={() => setShowAddEventForm(false)}
+              />
+            )}
+
+            {showAddEventForm && clubs.length === 0 && (
+              <div className="alert-box">
+                <p>⚠️ Please add at least one club before creating events.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Registered Clubs Section */}
           <div className="dashboard-section">
             <div className="section-header">
               <h2>Registered Clubs</h2>
               <button
-                onClick={() => setShowAddForm(!showAddForm)}
+                onClick={() => {
+                  setShowAddClubForm(!showAddClubForm)
+                  setShowAddEventForm(false)
+                }}
                 className="add-club-btn"
               >
-                {showAddForm ? '✕ Cancel' : '+ Add New Club'}
+                {showAddClubForm ? '✕ Cancel' : '+ Add New Club'}
               </button>
             </div>
 
-            {showAddForm && (
+            {showAddClubForm && (
               <AddClubForm
                 onAddClub={handleAddClub}
-                onCancel={() => setShowAddForm(false)}
+                onCancel={() => setShowAddClubForm(false)}
               />
             )}
 
