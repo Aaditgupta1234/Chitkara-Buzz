@@ -9,9 +9,13 @@ import AdminLogin from './components/AdminLogin'
 import AdminDashboard from './components/AdminDashboard'
 import StudentLogin from './components/StudentLogin'
 import StudentRegister from './components/StudentRegister'
+import { SkeletonGrid } from './components/SkeletonCard'
 import { initializeDummyData, forceRefreshDummyData, dummyClubs, dummyEvents } from './data/dummyData'
+import { useApp } from './context/AppContext'
 
 function App() {
+  const { darkMode } = useApp()
+  
   // Admin state
   const [isAdmin, setIsAdmin] = useState(false)
   const [showAdminLogin, setShowAdminLogin] = useState(false)
@@ -33,6 +37,12 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedClub, setSelectedClub] = useState('all')
   const [selectedCategory, setSelectedCategory] = useState('all')
+
+  // Apply dark mode to body
+  useEffect(() => {
+    document.body.classList.toggle('light-mode', !darkMode)
+    document.body.classList.toggle('dark-mode', darkMode)
+  }, [darkMode])
 
   // Check if admin is logged in on component mount
   useEffect(() => {
@@ -300,7 +310,7 @@ function App() {
   }
   
   return (
-    <div className="app">
+    <div className={`app ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       <Header 
         onAdminClick={handleAdminClick} 
         isAdmin={isAdmin}
@@ -330,10 +340,7 @@ function App() {
 
         <main className="main-content">
           {loading ? (
-            <div className="loading">
-              <div className="spinner"></div>
-              <p>Loading upcoming events...</p>
-            </div>
+            <SkeletonGrid count={6} />
           ) : filteredEvents.length > 0 ? (
             <div className="events-grid">
               {filteredEvents.map(event => (
@@ -414,7 +421,11 @@ function App() {
       </section>
 
       {selectedEvent && (
-        <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+        <EventModal 
+          event={selectedEvent} 
+          onClose={() => setSelectedEvent(null)} 
+          student={student}
+        />
       )}
     </div>
   )

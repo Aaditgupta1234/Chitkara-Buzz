@@ -99,3 +99,50 @@
         font-size: 13px;
     }
 }
+
+/* ========== LIGHT MODE STYLES ========== */
+.light-mode .filter-bar {
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom-color: rgba(102, 126, 234, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .search-input {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.2);
+    color: #1e293b;
+}
+
+.light-mode .search-input::placeholder {
+    color: #94a3b8;
+}
+
+.light-mode .search-input:focus {
+    background: rgba(255, 255, 255, 1);
+    border-color: #667eea;
+}
+
+.light-mode .search-icon {
+    color: #64748b;
+}
+
+.light-mode .filter-select {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.2);
+    color: #1e293b;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23334155' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+}
+
+.light-mode .filter-select option {
+    background: #fff;
+    color: #1e293b;
+}
+
+.light-mode .filter-select:focus {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.light-mode .filter-select:hover {
+    border-color: rgba(102, 126, 234, 0.4);
+    background-color: rgba(255, 255, 255, 1);
+}

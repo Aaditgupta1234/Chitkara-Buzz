@@ -1,7 +1,34 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './EventModal.css'
+import { useApp } from '../context/AppContext'
+import { getCountdown, shareEvent, getCategoryIcon, getCategoryColor } from '../utils/helpers'
 
-function EventModal({ event, onClose }) {
+function EventModal({ event, onClose, student }) {
+  const [showShareMenu, setShowShareMenu] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [countdown, setCountdown] = useState({ text: '', urgent: false, expired: false })
+  
+  const { 
+    isBookmarked, 
+    toggleBookmark, 
+    isRegisteredForEvent, 
+    registerForEvent, 
+    unregisterFromEvent 
+  } = useApp()
+  
+  const bookmarked = isBookmarked(event.id)
+  const isRegistered = isRegisteredForEvent(event.id)
+
+  // Update countdown every minute
+  useEffect(() => {
+    const updateCountdown = () => {
+      setCountdown(getCountdown(event.date, event.time))
+    }
+    updateCountdown()
+    const interval = setInterval(updateCountdown, 60000)
+    return () => clearInterval(interval)
+  }, [event.date, event.time])
+
   const getFullDate = (dateString) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', {
@@ -16,19 +43,75 @@ function EventModal({ event, onClose }) {
     return Math.round((event.registered / event.capacity) * 100)
   }
 
+  const handleShare = async (platform) => {
+    if (platform === 'copy') {
+      const success = await shareEvent.copyLink(event)
+      if (success) {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      }
+    } else {
+      shareEvent[platform](event)
+    }
+    setShowShareMenu(false)
+  }
+
+  const handleRegister = () => {
+    if (isRegistered) {
+      unregisterFromEvent(event.id)
+    } else {
+      registerForEvent(event.id, student)
+    }
+  }
+
+  const categoryColor = getCategoryColor(event.category)
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="close-btn" onClick={onClose}>×</button>
 
+        {/* Registration status banner */}
+        {isRegistered && (
+          <div className="registration-banner">
+            <span className="reg-icon">✓</span>
+            <span>You're registered for this event!</span>
+          </div>
+        )}
+
         <div className="modal-image">
-          <img src={event.banner} alt={event.title} />
+          {event.banner ? (
+            <img src={event.banner} alt={event.title} />
+          ) : (
+            <div className="modal-image-fallback" style={{ background: categoryColor.bg }}>
+              <span>{getCategoryIcon(event.category)}</span>
+            </div>
+          )}
+          
+          {/* Countdown overlay */}
+          <div className={`modal-countdown ${countdown.urgent ? 'urgent' : ''}`}>
+            <span className="countdown-label">⏱️ {countdown.text}</span>
+          </div>
         </div>
 
         <div className="modal-body">
           <div className="modal-header">
-            <h2>{event.title}</h2>
-            <span className="category-badge">{event.category}</span>
+            <div className="modal-title-section">
+              <h2>{event.title}</h2>
+              <button 
+                className={`modal-bookmark-btn ${bookmarked ? 'active' : ''}`}
+                onClick={() => toggleBookmark(event.id)}
+              >
+                {bookmarked ? '★ Saved' : '☆ Save'}
+              </button>
+            </div>
+            <span className="category-badge" style={{ 
+              background: categoryColor.bg, 
+              color: categoryColor.text,
+              borderColor: categoryColor.border 
+            }}>
+              {getCategoryIcon(event.category)} {event.category}
+            </span>
           </div>
 
           <div className="event-info-grid">
@@ -69,21 +152,37 @@ function EventModal({ event, onClose }) {
           </div>
 
           <div className="modal-actions">
-            <a
-              href={event.registrationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="register-btn"
+            <button 
+              className={`register-btn ${isRegistered ? 'registered' : ''}`}
+              onClick={handleRegister}
             >
-              Register Now
-            </a>
-            <button className="share-btn" onClick={() => {
-              const text = `Check out "${event.title}" on Chitkara Buzz! ${event.registrationLink}`
-              navigator.clipboard.writeText(text)
-              alert('Event link copied to clipboard!')
-            }}>
-              Share
+              {isRegistered ? '✓ Registered - Click to Cancel' : '🎫 Register Now'}
             </button>
+            
+            <div className="share-dropdown">
+              <button 
+                className="share-btn"
+                onClick={() => setShowShareMenu(!showShareMenu)}
+              >
+                📤 Share
+              </button>
+              {showShareMenu && (
+                <div className="share-dropdown-menu">
+                  <button onClick={() => handleShare('whatsapp')}>
+                    💬 WhatsApp
+                  </button>
+                  <button onClick={() => handleShare('twitter')}>
+                    🐦 Twitter
+                  </button>
+                  <button onClick={() => handleShare('email')}>
+                    📧 Email
+                  </button>
+                  <button onClick={() => handleShare('copy')}>
+                    {copied ? '✓ Copied!' : '📋 Copy Link'}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

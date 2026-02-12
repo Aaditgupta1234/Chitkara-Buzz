@@ -294,6 +294,204 @@
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
 }
 
+/* Registration Banner */
+.registration-banner {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    animation: bannerSlideDown 0.3s ease;
+}
+
+@keyframes bannerSlideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.registration-banner .banner-icon {
+    font-size: 18px;
+}
+
+/* Modal Header Actions */
+.modal-header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.modal-bookmark-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.modal-bookmark-btn:hover {
+    background: rgba(255, 193, 7, 0.2);
+    border-color: rgba(255, 193, 7, 0.5);
+    color: #ffc107;
+}
+
+.modal-bookmark-btn.bookmarked {
+    background: rgba(255, 193, 7, 0.2);
+    border-color: rgba(255, 193, 7, 0.5);
+    color: #ffc107;
+}
+
+/* Category Badge with Color */
+.category-badge.category-colored {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.category-badge .category-icon {
+    font-size: 14px;
+}
+
+/* Countdown Badge in Modal */
+.modal-countdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    margin-bottom: 20px;
+}
+
+.modal-countdown.urgent {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.modal-countdown .countdown-icon {
+    font-size: 20px;
+}
+
+.modal-countdown .countdown-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Share Menu in Modal */
+.modal-share-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.modal-share-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(30, 25, 60, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
+    animation: shareMenuSlideUp 0.2s ease;
+    z-index: 100;
+}
+
+@keyframes shareMenuSlideUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-share-menu .share-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: left;
+}
+
+.modal-share-menu .share-option:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.modal-share-menu .share-option .share-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.modal-share-menu .share-option.whatsapp:hover {
+    background: rgba(37, 211, 102, 0.2);
+}
+
+.modal-share-menu .share-option.twitter:hover {
+    background: rgba(29, 161, 242, 0.2);
+}
+
+.modal-share-menu .share-option.email:hover {
+    background: rgba(234, 67, 53, 0.2);
+}
+
+.modal-share-menu .share-option.copy:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.modal-share-menu .share-option.copy.copied {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+/* Enhanced Register Button States */
+.register-btn.registered {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.register-btn.registered:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+}
+
+/* Toggle Share Button */
+.share-btn.active {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
 @media (max-width: 600px) {
     .modal-content {
         max-width: 95vw;
@@ -324,4 +522,109 @@
     .modal-actions {
         flex-direction: column;
     }
+
+    .modal-share-menu {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 20px 20px 0 0;
+        margin-bottom: 0;
+    }
+
+    .modal-header-actions {
+        position: absolute;
+        top: 18px;
+        right: 70px;
+    }
+}
+
+/* ========== LIGHT MODE STYLES ========== */
+.light-mode .modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.light-mode .modal-content {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
+    border-color: rgba(102, 126, 234, 0.15);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+}
+
+.light-mode .close-btn {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.2);
+    color: #334155;
+}
+
+.light-mode .close-btn:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.light-mode .modal-header h2 {
+    background: linear-gradient(135deg, #1e293b, #667eea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.light-mode .info-item {
+    background: rgba(102, 126, 234, 0.05);
+    border-color: rgba(102, 126, 234, 0.1);
+}
+
+.light-mode .info-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.light-mode .info-label {
+    color: #667eea;
+}
+
+.light-mode .info-value {
+    color: #1e293b;
+}
+
+.light-mode .modal-description h3 {
+    color: #1e293b;
+}
+
+.light-mode .modal-description p {
+    color: #475569;
+}
+
+.light-mode .occupancy-section {
+    background: rgba(102, 126, 234, 0.05);
+    border-color: rgba(102, 126, 234, 0.1);
+}
+
+.light-mode .occupancy-section h3 {
+    color: #1e293b;
+}
+
+.light-mode .occupancy-stat {
+    color: #64748b;
+}
+
+.light-mode .modal-bookmark-btn {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.2);
+    color: #64748b;
+}
+
+.light-mode .modal-countdown {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.2);
+}
+
+.light-mode .modal-countdown .countdown-text {
+    color: #334155;
+}
+
+.light-mode .modal-share-menu {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(102, 126, 234, 0.15);
+}
+
+.light-mode .modal-share-menu .share-option {
+    color: #334155;
 }

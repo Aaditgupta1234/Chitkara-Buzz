@@ -1,39 +1,14 @@
 .event-card {
     background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
     border-radius: 18px;
     overflow: hidden;
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     display: flex;
     flex-direction: column;
     height: 100%;
-    animation: cardFadeIn 0.6s ease-out backwards;
-}
-
-@keyframes cardFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.event-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow:
-        0 25px 50px rgba(102, 126, 234, 0.3),
-        0 0 30px rgba(118, 75, 162, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    border-color: rgba(102, 126, 234, 0.3);
 }
 
 .event-image {
@@ -47,11 +22,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.event-card:hover .event-image img {
-    transform: scale(1.05);
 }
 
 /* Image fallback styles */
@@ -63,11 +33,6 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    transition: transform 0.3s ease;
-}
-
-.event-card:hover .image-fallback {
-    transform: scale(1.05);
 }
 
 .fallback-icon {
@@ -173,11 +138,6 @@
     margin: 10px 0;
     color: #fff;
     line-height: 1.3;
-    transition: color 0.3s ease;
-}
-
-.event-card:hover .event-title {
-    color: #667eea;
 }
 
 .event-location {
@@ -303,4 +263,275 @@
     .event-image {
         height: 150px;
     }
+}
+
+/* ========== NEW FEATURES STYLES ========== */
+
+/* Registered card styling */
+.event-card.registered {
+    border-color: rgba(67, 233, 123, 0.4);
+    box-shadow: 0 8px 32px rgba(67, 233, 123, 0.15);
+}
+
+.registered-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(67, 233, 123, 0.6);
+    }
+}
+
+/* Quick action buttons - Always visible */
+.card-quick-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.quick-action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.quick-action-btn:hover {
+    transform: scale(1.15);
+    background: rgba(102, 126, 234, 0.8);
+}
+
+.bookmark-btn.active {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+}
+
+.bookmark-btn.active:hover {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* Share menu */
+.share-container {
+    position: relative;
+}
+
+.share-menu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 150px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: shareMenuSlide 0.2s ease;
+}
+
+@keyframes shareMenuSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.share-menu button {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+
+.share-menu button:hover {
+    background: rgba(102, 126, 234, 0.3);
+    color: white;
+}
+
+.share-menu button span {
+    font-size: 16px;
+}
+
+/* Countdown badge */
+.countdown-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.countdown-badge.urgent {
+    background: linear-gradient(135deg, rgba(248, 113, 113, 0.9), rgba(239, 68, 68, 0.9));
+    border-color: rgba(248, 113, 113, 0.5);
+    animation: urgentPulse 1s ease-in-out infinite;
+}
+
+@keyframes urgentPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.countdown-badge.expired {
+    background: rgba(107, 114, 128, 0.8);
+    border-color: rgba(107, 114, 128, 0.5);
+}
+
+.countdown-icon {
+    font-size: 14px;
+}
+
+/* Club icon in content */
+.club-icon {
+    margin-right: 6px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .card-quick-actions {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .quick-action-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .share-menu {
+        right: -50px;
+    }
+}
+
+/* ========== LIGHT MODE STYLES ========== */
+.light-mode .event-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .card-content {
+    background: transparent;
+}
+
+.light-mode .event-title {
+    color: #1e293b;
+}
+
+.light-mode .event-description {
+    color: #64748b;
+}
+
+.light-mode .club-info {
+    background: rgba(102, 126, 234, 0.08);
+}
+
+.light-mode .club-name-small {
+    color: #334155;
+}
+
+.light-mode .event-meta span {
+    color: #475569;
+}
+
+.light-mode .quick-action-btn {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.2);
+    color: #64748b;
+}
+
+.light-mode .quick-action-btn:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.light-mode .share-menu {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(102, 126, 234, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.light-mode .share-option {
+    color: #334155;
+}
+
+.light-mode .share-option:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.light-mode .countdown-badge {
+    background: rgba(102, 126, 234, 0.15);
+    border-color: rgba(102, 126, 234, 0.25);
+    color: #334155;
+}
+
+.light-mode .countdown-badge.urgent {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #dc2626;
 }

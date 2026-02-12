@@ -1,9 +1,12 @@
 import React from 'react'
 import './Header.css'
+import { useApp } from '../context/AppContext'
 
 function Header({ onAdminClick, isAdmin, student, onStudentLoginClick, onStudentLogout }) {
+  const { darkMode, toggleTheme, bookmarks } = useApp()
+  
   return (
-    <header className="header">
+    <header className={`header ${darkMode ? 'dark' : 'light'}`}>
       <div className="header-content">
         <div className="logo-section">
           <div className="logo">
@@ -23,6 +26,23 @@ function Header({ onAdminClick, isAdmin, student, onStudentLoginClick, onStudent
           <a href="#events" className="nav-link">Events</a>
           <a href="#clubs" className="nav-link">Clubs</a>
           <a href="#about" className="nav-link">About</a>
+          
+          {/* Theme Toggle Button */}
+          <button 
+            onClick={toggleTheme} 
+            className="theme-toggle-btn"
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+          
+          {/* Bookmarks Indicator */}
+          {bookmarks.length > 0 && (
+            <div className="bookmarks-indicator" title={`${bookmarks.length} bookmarked events`}>
+              <span className="bookmark-icon">🔖</span>
+              <span className="bookmark-count">{bookmarks.length}</span>
+            </div>
+          )}
           
           {student ? (
             <div className="logged-in-badge student-badge">

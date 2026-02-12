@@ -17,7 +17,7 @@ body {
     min-height: 100vh;
 }
 
-/* Animated background particles */
+/* Static background particles - no animation for performance */
 body::before {
     content: '';
     position: fixed;
@@ -31,21 +31,6 @@ body::before {
         radial-gradient(circle at 40% 40%, rgba(255, 0, 128, 0.1) 0%, transparent 40%);
     pointer-events: none;
     z-index: 0;
-    animation: backgroundPulse 15s ease-in-out infinite;
-}
-
-@keyframes backgroundPulse {
-
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.8;
-        transform: scale(1.1);
-    }
 }
 
 .app {
@@ -68,7 +53,10 @@ body::before {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 30px;
-    animation: fadeInUp 0.6s ease-out;
+}
+
+.events-grid .event-card {
+    opacity: 1;
 }
 
 @keyframes fadeInUp {
@@ -213,8 +201,19 @@ section {
 
 .events-section {
     background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
     padding: 60px 20px;
+    position: relative;
+}
+
+/* Simple gradient border at top */
+.events-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #00d4ff, #f093fb);
 }
 
 .clubs-section {
@@ -223,14 +222,15 @@ section {
     position: relative;
 }
 
+/* Simple border for clubs section */
 .clubs-section::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #667eea, #764ba2, #00d4ff, transparent);
 }
 
 .clubs-section .section-header {
@@ -263,44 +263,30 @@ section {
     gap: 25px;
 }
 
+.clubs-grid-simple .club-item {
+    opacity: 1;
+}
+
 .club-item {
     background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
     padding: 25px;
     text-align: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     position: relative;
-    overflow: hidden;
-}
-
-.club-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.6s ease;
-}
-
-.club-item:hover::before {
-    left: 100%;
 }
 
 .club-item:hover {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-10px);
     box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
     border-color: rgba(102, 126, 234, 0.5);
-    background: rgba(255, 255, 255, 0.12);
 }
 
 .club-item-logo {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     margin: 0 auto 15px;
     display: flex;
     align-items: center;
@@ -311,7 +297,7 @@ section {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    border-radius: 12px;
+    border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
     padding: 8px;
     transition: transform 0.3s ease;
@@ -322,21 +308,26 @@ section {
 }
 
 .club-logo-fallback {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.club-item:hover .club-logo-fallback {
+    transform: scale(1.1);
 }
 
 .club-name {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #fff;
     margin-bottom: 10px;
@@ -344,12 +335,18 @@ section {
 
 .club-category {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 500;
-    padding: 6px 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    padding: 8px 16px;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
     border-radius: 20px;
     display: inline-block;
+}
+
+.club-item:hover .club-category {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5));
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .no-clubs {
@@ -676,56 +673,391 @@ section {
     }
 }
 
-/* Card entrance animation */
-.events-grid {
-    animation: fadeInUp 0.6s ease-out;
+/* Events grid is always visible */
+
+/* ========== LIGHT MODE STYLES ========== */
+body.light-mode {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
 }
 
-.events-grid .event-card {
-    opacity: 0;
-    animation: cardSlideIn 0.5s ease-out forwards;
+body.light-mode::before {
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(0, 212, 255, 0.05) 0%, transparent 40%);
 }
 
-.events-grid .event-card:nth-child(1) {
-    animation-delay: 0.1s;
+.light-mode .home-section {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.95) 100%);
 }
 
-.events-grid .event-card:nth-child(2) {
-    animation-delay: 0.2s;
+.light-mode .home-hero h2 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.events-grid .event-card:nth-child(3) {
-    animation-delay: 0.3s;
+.light-mode .home-hero p {
+    color: #475569;
 }
 
-.events-grid .event-card:nth-child(4) {
-    animation-delay: 0.4s;
+.light-mode .events-section {
+    background: rgba(248, 250, 252, 0.9);
 }
 
-.events-grid .event-card:nth-child(5) {
-    animation-delay: 0.5s;
+.light-mode .clubs-section {
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0.95) 0%, rgba(226, 232, 240, 0.95) 100%);
 }
 
-.events-grid .event-card:nth-child(6) {
-    animation-delay: 0.6s;
+.light-mode .section-header h2 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.events-grid .event-card:nth-child(7) {
-    animation-delay: 0.7s;
+.light-mode .section-header p {
+    color: #64748b;
 }
 
-.events-grid .event-card:nth-child(8) {
-    animation-delay: 0.8s;
+.light-mode .club-item {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-@keyframes cardSlideIn {
+.light-mode .club-item:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.2);
+}
+
+.light-mode .club-name {
+    color: #1e293b;
+}
+
+.light-mode .club-category {
+    color: #64748b;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+}
+
+.light-mode .about-section {
+    background: linear-gradient(180deg, rgba(226, 232, 240, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+}
+
+.light-mode .about-item {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(102, 126, 234, 0.15);
+}
+
+.light-mode .about-item:hover {
+    box-shadow: 0 20px 50px rgba(102, 126, 234, 0.15);
+}
+
+.light-mode .about-item h3 {
+    color: #1e293b;
+}
+
+.light-mode .about-item p,
+.light-mode .about-item li {
+    color: #475569;
+}
+
+.light-mode .loading {
+    color: #334155;
+}
+
+.light-mode .no-events p,
+.light-mode .no-clubs {
+    color: #64748b;
+}
+
+/* ========== ENHANCED SCROLL ANIMATIONS ========== */
+
+/* Section Title Animations */
+.section-header {
+    animation: sectionTitleReveal 0.8s ease-out;
+}
+
+@keyframes sectionTitleReveal {
     from {
         opacity: 0;
-        transform: translateY(30px) scale(0.95);
+        transform: translateY(30px);
+        filter: blur(10px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.section-header h2 {
+    position: relative;
+    display: inline-block;
+}
+
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #00d4ff);
+    border-radius: 2px;
+    animation: underlineExpand 1s ease-out 0.5s forwards;
+}
+
+@keyframes underlineExpand {
+    to {
+        width: 100px;
+    }
+}
+
+/* Grid items are always visible - no animations */
+
+/* Club Logo Fallback Glow */
+.club-logo-fallback {
+    animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(102, 126, 234, 0.6), 0 0 40px rgba(118, 75, 162, 0.3);
+    }
+}
+
+/* Club Item Shine Effect */
+.club-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.club-item::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent 40%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 60%);
+    transform: translateX(-100%);
+    transition: none;
+}
+
+.club-item:hover::after {
+    animation: shineEffect 0.8s ease-out;
+}
+
+@keyframes shineEffect {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+/* Section Decorative Elements */
+.clubs-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.clubs-section::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+    animation: floatingOrb 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.events-section::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    animation: floatingOrb 10s ease-in-out infinite reverse;
+    pointer-events: none;
+}
+
+@keyframes floatingOrb {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.5;
+    }
+
+    33% {
+        transform: translate(30px, -20px) scale(1.2);
+        opacity: 0.8;
+    }
+
+    66% {
+        transform: translate(-20px, 30px) scale(0.9);
+        opacity: 0.6;
+    }
+}
+
+/* Event Card Enhanced Hover Effects */
+.event-card {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.event-card:hover {
+    animation: cardHoverPulse 0.5s ease-out;
+}
+
+@keyframes cardHoverPulse {
+    0% {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 25px 60px rgba(102, 126, 234, 0.4), 0 0 50px rgba(118, 75, 162, 0.3);
+    }
+
+    100% {
+        box-shadow: 0 25px 50px rgba(102, 126, 234, 0.3), 0 0 30px rgba(118, 75, 162, 0.2);
+    }
+}
+
+/* About Section Card Animations */
+.about-content .about-item {
+    animation: aboutItemReveal 0.7s ease-out backwards;
+}
+
+.about-content .about-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.about-content .about-item:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.about-content .about-item:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes aboutItemReveal {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animated Background Particles for Sections */
+.events-section,
+.clubs-section {
+    position: relative;
+}
+
+.events-section::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(118, 75, 162, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: particlePulse 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes particlePulse {
+
+    0%,
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: scale(1.5) translateY(-30px);
+        opacity: 0.6;
+    }
+}
+
+/* Smooth Scroll Snap Feel */
+.events-section,
+.clubs-section,
+.about-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+}
+
+/* Text Shimmer Effect for Headers */
+.section-header h2 {
+    background-size: 200% auto;
+    animation: textShimmer 4s linear infinite;
+}
+
+@keyframes textShimmer {
+    0% {
+        background-position: 0% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* Club Category Tag Bounce */
+.club-category {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.club-item:hover .club-category {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5));
+}
+
+/* Entrance Animation for Events Section Title */
+.events-section .section-header,
+.clubs-section .section-header {
+    position: relative;
+}
+
+.events-section .section-header h2,
+.clubs-section .section-header h2 {
+    animation: titleBounceIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes titleBounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(50px);
+    }
+
+    60% {
+        transform: scale(1.05) translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
     }
 }

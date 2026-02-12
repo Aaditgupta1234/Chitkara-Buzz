@@ -413,3 +413,160 @@
         font-size: 12px;
     }
 }
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: rotate(180deg) scale(1.1);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+}
+
+.theme-toggle-btn:hover::before {
+    opacity: 1;
+}
+
+.theme-toggle-btn:active {
+    transform: rotate(180deg) scale(0.95);
+}
+
+/* Bookmarks Indicator */
+.bookmarks-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 193, 7, 0.2);
+    border: 2px solid rgba(255, 193, 7, 0.4);
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: bookmarkBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bookmarkBounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.bookmarks-indicator:hover {
+    background: rgba(255, 193, 7, 0.3);
+    border-color: rgba(255, 193, 7, 0.6);
+    transform: scale(1.05);
+}
+
+.bookmark-icon {
+    font-size: 16px;
+}
+
+.bookmark-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffc107;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Light Mode Styles */
+.header.light {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.header.light .logo-text h1 {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header.light .logo-text p {
+    color: rgba(102, 126, 234, 0.9);
+}
+
+.header.light .nav-link {
+    color: #334155;
+}
+
+.header.light .nav-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.header.light .theme-toggle-btn {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.header.light .theme-toggle-btn:hover {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+.header.light .student-login-btn,
+.header.light .admin-btn {
+    background: rgba(102, 126, 234, 0.1);
+    color: #334155;
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.header.light .student-login-btn:hover,
+.header.light .admin-btn:hover {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+@media (max-width: 900px) {
+    .theme-toggle-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .bookmarks-indicator {
+        padding: 6px 10px;
+    }
+
+    .bookmark-count {
+        font-size: 11px;
+    }
+}

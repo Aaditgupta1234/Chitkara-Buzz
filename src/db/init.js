@@ -1,5 +1,4 @@
 /**
- * 
  * Database Initialization Script
  * Run with: npm run init-db
  */
