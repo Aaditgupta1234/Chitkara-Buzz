@@ -7,12 +7,257 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import pg from 'pg';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+const { Pool } = pg;
 
 const app = express();
 const PORT = 5000;
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+// PostgreSQL connection
+const pool = new Pool({
+    user: process.env.DB_USER || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    database: process.env.DB_NAME || 'college_events',
+    password: process.env.DB_PASSWORD || 'postgres',
+    port: process.env.DB_PORT || 5432,
+});
+
+pool.on('connect', () => {
+    console.log('✅ Connected to PostgreSQL database');
+});
+
+pool.on('error', (err) => {
+    console.error('❌ PostgreSQL connection error:', err);
+});
 
 app.use(cors());
 app.use(express.json());
+
+// ==================== AUTH MIDDLEWARE ====================
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Access token required' });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Invalid or expired token' });
+        }
+        req.user = user;
+        next();
+    });
+};
+
+// ==================== STUDENT AUTH ROUTES ====================
+
+/**
+ * Student Registration
+ */
+app.post('/api/auth/register', async (req, res) => {
+    try {
+        const { rollNumber, email, password, name, department, year } = req.body;
+
+        // Validation
+        if (!rollNumber || !email || !password || !name) {
+            return res.status(400).json({ error: 'Roll number, email, password, and name are required' });
+        }
+
+        // Check if student already exists
+        const existingStudent = await pool.query(
+            'SELECT * FROM students WHERE roll_number = $1 OR email = $2',
+            [rollNumber, email]
+        );
+
+        if (existingStudent.rows.length > 0) {
+            return res.status(400).json({ error: 'Student with this roll number or email already exists' });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert student
+        const result = await pool.query(
+            `INSERT INTO students (roll_number, email, password, name, department, year) 
+       VALUES ($1, $2, $3, $4, $5, $6) 
+       RETURNING id, roll_number, email, name, department, year, created_at`,
+            [rollNumber, email, hashedPassword, name, department || null, year || null]
+        );
+
+        const student = result.rows[0];
+
+        // Generate token
+        const token = jwt.sign(
+            { id: student.id, rollNumber: student.roll_number, email: student.email },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.status(201).json({
+            message: 'Registration successful',
+            token,
+            student: {
+                id: student.id,
+                rollNumber: student.roll_number,
+                email: student.email,
+                name: student.name,
+                department: student.department,
+                year: student.year
+            }
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'Registration failed. Please try again.' });
+    }
+});
+
+/**
+ * Student Login
+ */
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { rollNumber, email, password } = req.body;
+
+        // Validation
+        if ((!rollNumber && !email) || !password) {
+            return res.status(400).json({ error: 'Roll number or email, and password are required' });
+        }
+
+        // Find student
+        const result = await pool.query(
+            'SELECT * FROM students WHERE roll_number = $1 OR email = $2',
+            [rollNumber || '', email || '']
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const student = result.rows[0];
+
+        // Check password
+        const validPassword = await bcrypt.compare(password, student.password);
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Generate token
+        const token = jwt.sign(
+            { id: student.id, rollNumber: student.roll_number, email: student.email },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            message: 'Login successful',
+            token,
+            student: {
+                id: student.id,
+                rollNumber: student.roll_number,
+                email: student.email,
+                name: student.name,
+                department: student.department,
+                year: student.year
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Login failed. Please try again.' });
+    }
+});
+
+/**
+ * Get current student profile
+ */
+app.get('/api/auth/profile', authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT id, roll_number, email, name, department, year, created_at FROM students WHERE id = $1',
+            [req.user.id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Student not found' });
+        }
+
+        const student = result.rows[0];
+        res.json({
+            id: student.id,
+            rollNumber: student.roll_number,
+            email: student.email,
+            name: student.name,
+            department: student.department,
+            year: student.year,
+            createdAt: student.created_at
+        });
+    } catch (error) {
+        console.error('Profile error:', error);
+        res.status(500).json({ error: 'Failed to fetch profile' });
+    }
+});
+
+/**
+ * Register for an event
+ */
+app.post('/api/events/register', authenticateToken, async (req, res) => {
+    try {
+        const { eventId, eventTitle } = req.body;
+
+        if (!eventId || !eventTitle) {
+            return res.status(400).json({ error: 'Event ID and title are required' });
+        }
+
+        // Check if already registered
+        const existing = await pool.query(
+            'SELECT * FROM event_registrations WHERE student_id = $1 AND event_id = $2',
+            [req.user.id, eventId]
+        );
+
+        if (existing.rows.length > 0) {
+            return res.status(400).json({ error: 'Already registered for this event' });
+        }
+
+        // Register for event
+        await pool.query(
+            'INSERT INTO event_registrations (student_id, event_id, event_title) VALUES ($1, $2, $3)',
+            [req.user.id, eventId, eventTitle]
+        );
+
+        res.json({ message: 'Successfully registered for event' });
+    } catch (error) {
+        console.error('Event registration error:', error);
+        res.status(500).json({ error: 'Failed to register for event' });
+    }
+});
+
+/**
+ * Get student's registered events
+ */
+app.get('/api/events/my-registrations', authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT event_id, event_title, registered_at FROM event_registrations WHERE student_id = $1 ORDER BY registered_at DESC',
+            [req.user.id]
+        );
+
+        res.json(result.rows.map(row => ({
+            eventId: row.event_id,
+            eventTitle: row.event_title,
+            registeredAt: row.registered_at
+        })));
+    } catch (error) {
+        console.error('Fetch registrations error:', error);
+        res.status(500).json({ error: 'Failed to fetch registrations' });
+    }
+});
+
+// ==================== EXISTING EVENT ROUTES ====================
 
 /**
  * Parse events from JSON format

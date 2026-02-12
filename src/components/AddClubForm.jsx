@@ -7,6 +7,7 @@ function AddClubForm({ onAddClub, onCancel }) {
     website: '',
     category: 'Technical',
     description: '',
+    logo: '',
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -72,6 +73,7 @@ function AddClubForm({ onAddClub, onCancel }) {
         website: '',
         category: 'Technical',
         description: '',
+        logo: '',
       })
     } catch (err) {
       setError('Failed to add club. Please try again.')
@@ -124,6 +126,26 @@ function AddClubForm({ onAddClub, onCancel }) {
           />
           <p className="form-hint">
             The website where your club's events are published
+          </p>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="logo">Club Logo URL</label>
+          <input
+            id="logo"
+            type="url"
+            name="logo"
+            placeholder="e.g., https://example.com/logo.png"
+            value={formData.logo}
+            onChange={handleChange}
+          />
+          {formData.logo && (
+            <div className="logo-preview-small">
+              <img src={formData.logo} alt="Logo preview" onError={(e) => e.target.style.display='none'} />
+            </div>
+          )}
+          <p className="form-hint">
+            Optional: URL to your club's logo image
           </p>
         </div>
 

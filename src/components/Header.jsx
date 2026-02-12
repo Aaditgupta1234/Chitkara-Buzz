@@ -1,7 +1,7 @@
 import React from 'react'
 import './Header.css'
 
-function Header({ onAdminClick, isAdmin }) {
+function Header({ onAdminClick, isAdmin, student, onStudentLoginClick, onStudentLogout }) {
   return (
     <header className="header">
       <div className="header-content">
@@ -15,17 +15,44 @@ function Header({ onAdminClick, isAdmin }) {
           </div>
           <div className="logo-text">
             <h1>Chitkara Buzz</h1>
-            <p>College Events Hub</p>
+            <p>COLLEGE EVENTS HUB</p>
           </div>
         </div>
         <nav className="nav">
-          <a href="#home">Home</a>
-          <a href="#events">Events</a>
-          <a href="#clubs">Clubs</a>
-          <a href="#about">About</a>
-          <button onClick={onAdminClick} className="admin-btn">
-            {isAdmin ? '⚙️ Admin Panel' : '🔐 Admin'}
-          </button>
+          <a href="#home" className="nav-link">Home</a>
+          <a href="#events" className="nav-link">Events</a>
+          <a href="#clubs" className="nav-link">Clubs</a>
+          <a href="#about" className="nav-link">About</a>
+          
+          {student ? (
+            <div className="logged-in-badge student-badge">
+              <span className="pulse-dot"></span>
+              <span className="logged-text">Logged in as <strong>{student.name}</strong></span>
+              <button onClick={onStudentLogout} className="logout-mini-btn" title="Logout">
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button onClick={onStudentLoginClick} className="student-login-btn">
+              <span className="btn-icon">👤</span>
+              <span>Student Login</span>
+            </button>
+          )}
+          
+          {isAdmin ? (
+            <div className="logged-in-badge admin-badge">
+              <span className="pulse-dot"></span>
+              <span className="logged-text"><strong>Admin</strong></span>
+              <button onClick={onAdminClick} className="admin-panel-btn" title="Go to Admin Panel">
+                ⚙️
+              </button>
+            </div>
+          ) : (
+            <button onClick={onAdminClick} className="admin-btn">
+              <span className="btn-icon">🔐</span>
+              <span>Admin</span>
+            </button>
+          )}
         </nav>
       </div>
     </header>

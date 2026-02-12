@@ -7,6 +7,9 @@ import FilterBar from './components/FilterBar'
 import EventModal from './components/EventModal'
 import AdminLogin from './components/AdminLogin'
 import AdminDashboard from './components/AdminDashboard'
+import StudentLogin from './components/StudentLogin'
+import StudentRegister from './components/StudentRegister'
+import { initializeDummyData, forceRefreshDummyData, dummyClubs, dummyEvents } from './data/dummyData'
 
 function App() {
   // Admin state
@@ -14,10 +17,18 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false)
   const [registeredClubs, setRegisteredClubs] = useState([])
 
+  // Student auth state
+  const [student, setStudent] = useState(null)
+  const [showStudentAuth, setShowStudentAuth] = useState(false)
+  const [authMode, setAuthMode] = useState('login') // 'login' or 'register'
+
   // Events state
   const [events, setEvents] = useState([])
   const [filteredEvents, setFilteredEvents] = useState([])
   const [loading, setLoading] = useState(true)
+  
+  // Startup animation state
+  const [showSplash, setShowSplash] = useState(true)
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedClub, setSelectedClub] = useState('all')
@@ -25,23 +36,69 @@ function App() {
 
   // Check if admin is logged in on component mount
   useEffect(() => {
+    // Show splash screen for 2.5 seconds
+    const splashTimer = setTimeout(() => {
+      setShowSplash(false)
+    }, 2500)
+
     const adminToken = localStorage.getItem('adminToken')
     if (adminToken) {
       setIsAdmin(true)
     }
 
-    // Load registered clubs
-    const savedClubs = localStorage.getItem('registeredClubs')
-    if (savedClubs) {
-      const clubs = JSON.parse(savedClubs)
-      setRegisteredClubs(clubs)
-      fetchEventsFromRegisteredClubs(clubs)
-    } else {
-      // No clubs registered - show empty state
-      setEvents([])
-      setFilteredEvents([])
-      setLoading(false)
+    // Check if student is logged in
+    const studentToken = localStorage.getItem('studentToken')
+    const studentData = localStorage.getItem('studentData')
+    if (studentToken && studentData) {
+      setStudent(JSON.parse(studentData))
     }
+
+    // Force refresh dummy data to ensure correct format
+    // Check if data needs migration (old format had 'image' instead of 'banner')
+    const savedEvents = localStorage.getItem('manualEvents')
+    let needsRefresh = false
+    
+    if (savedEvents) {
+      try {
+        const parsed = JSON.parse(savedEvents)
+        if (parsed.length > 0 && parsed[0].image && !parsed[0].banner) {
+          needsRefresh = true
+        }
+      } catch (e) {
+        needsRefresh = true
+      }
+    }
+    
+    let parsedClubs, parsedEvents
+    
+    if (needsRefresh || !savedEvents) {
+      // Force refresh with correct data format
+      const { clubs, events } = forceRefreshDummyData()
+      parsedClubs = clubs
+      parsedEvents = events
+    } else {
+      const savedClubs = localStorage.getItem('registeredClubs')
+      parsedClubs = savedClubs ? JSON.parse(savedClubs) : []
+      parsedEvents = JSON.parse(savedEvents)
+      
+      // Initialize with dummy data if no data exists
+      if (parsedClubs.length === 0) {
+        localStorage.setItem('registeredClubs', JSON.stringify(dummyClubs))
+        parsedClubs = dummyClubs
+      }
+      
+      if (parsedEvents.length === 0) {
+        localStorage.setItem('manualEvents', JSON.stringify(dummyEvents))
+        parsedEvents = dummyEvents
+      }
+    }
+    
+    setRegisteredClubs(parsedClubs)
+    setEvents(parsedEvents)
+    setFilteredEvents(parsedEvents)
+    setLoading(false)
+
+    return () => clearTimeout(splashTimer)
   }, [])
 
   const fetchEventsFromRegisteredClubs = async (clubs) => {
@@ -125,9 +182,38 @@ function App() {
     setShowAdminLogin(false)
   }
 
+  // Student auth handlers
+  const handleStudentLoginClick = () => {
+    setShowStudentAuth(true)
+    setAuthMode('login')
+  }
+
+  const handleStudentLoginSuccess = (studentData) => {
+    setStudent(studentData)
+    setShowStudentAuth(false)
+  }
+
+  const handleStudentLogout = () => {
+    setStudent(null)
+    localStorage.removeItem('studentToken')
+    localStorage.removeItem('studentData')
+  }
+
+  const handleSwitchToRegister = () => {
+    setAuthMode('register')
+  }
+
+  const handleSwitchToLogin = () => {
+    setAuthMode('login')
+  }
+
   const handleClubsUpdate = (clubs) => {
     setRegisteredClubs(clubs)
-    fetchEventsFromRegisteredClubs(clubs)
+    // Reload events from localStorage
+    const savedEvents = localStorage.getItem('manualEvents')
+    const manualEvents = savedEvents ? JSON.parse(savedEvents) : []
+    setEvents(manualEvents)
+    setFilteredEvents(manualEvents)
   }
 
   const handleFilter = (search, club, category) => {
@@ -165,12 +251,63 @@ function App() {
     return <AdminDashboard onLogout={handleAdminLogout} onClubsUpdate={handleClubsUpdate} />
   }
 
+  // If student auth is shown
+  if (showStudentAuth) {
+    if (authMode === 'login') {
+      return (
+        <StudentLogin
+          onLoginSuccess={handleStudentLoginSuccess}
+          onSwitchToRegister={handleSwitchToRegister}
+        />
+      )
+    } else {
+      return (
+        <StudentRegister
+          onRegisterSuccess={handleStudentLoginSuccess}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
+      )
+    }
+  }
+
   const uniqueClubs = [...new Set(events.map(e => e.club))]
   const uniqueCategories = [...new Set(events.map(e => e.category))]
+
+  // Show splash screen on startup
+  if (showSplash) {
+    return (
+      <div className="splash-screen">
+        <div className="splash-content">
+          <div className="splash-logo">
+            <div className="logo-icon">📅</div>
+            <h1 className="splash-title">Chitkara Buzz</h1>
+            <p className="splash-subtitle">COLLEGE EVENTS HUB</p>
+          </div>
+          <div className="splash-loader">
+            <div className="loader-bar"></div>
+          </div>
+          <p className="splash-text">Loading amazing events...</p>
+        </div>
+        <div className="splash-particles">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    )
+  }
   
   return (
     <div className="app">
-      <Header onAdminClick={handleAdminClick} isAdmin={isAdmin} />
+      <Header 
+        onAdminClick={handleAdminClick} 
+        isAdmin={isAdmin}
+        student={student}
+        onStudentLoginClick={handleStudentLoginClick}
+        onStudentLogout={handleStudentLogout}
+      />
       
       {/* Home Section */}
       <section id="home" className="home-section">
@@ -226,7 +363,14 @@ function App() {
             <div className="clubs-grid-simple">
               {registeredClubs.map((club) => (
                 <div key={club.id} className="club-item">
-                  <div className="club-name">📚 {club.name}</div>
+                  <div className="club-item-logo">
+                    {club.logo ? (
+                      <img src={club.logo} alt={`${club.name} logo`} />
+                    ) : (
+                      <span className="club-logo-fallback">{club.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <div className="club-name">{club.name}</div>
                   <div className="club-category">{club.category}</div>
                 </div>
               ))}

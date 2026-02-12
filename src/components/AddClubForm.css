@@ -1,28 +1,29 @@
 .add-club-form-container {
-    background: #f5f5f5;
-    border: 2px solid #d32f2f;
-    border-radius: 12px;
-    padding: 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 16px;
+    padding: 28px;
     margin-bottom: 25px;
-    animation: slideDown 0.3s ease;
+    animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(15px);
 }
 
 @keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-15px) scale(0.98);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
 .add-club-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 22px;
 }
 
 .form-row {
@@ -34,45 +35,52 @@
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .form-group label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #333;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: 13px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
     font-size: 14px;
     font-family: inherit;
     transition: all 0.3s ease;
-    background: white;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.form-group select option {
+    background: #302b63;
+    color: #fff;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #d32f2f;
-    box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    background: rgba(102, 126, 234, 0.08);
 }
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-    color: #999;
+    color: rgba(255, 255, 255, 0.35);
 }
 
 .form-hint {
     font-size: 12px;
-    color: #777;
+    color: rgba(255, 255, 255, 0.5);
     margin-top: -5px;
     line-height: 1.4;
 }
@@ -83,27 +91,27 @@
 }
 
 .error-message {
-    background: #ffebee;
-    color: #c62828;
-    padding: 12px 15px;
-    border-radius: 8px;
+    background: rgba(248, 113, 113, 0.15);
+    color: #fca5a5;
+    padding: 14px 16px;
+    border-radius: 10px;
     font-size: 13px;
     font-weight: 500;
-    border-left: 4px solid #c62828;
+    border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
 .form-actions {
     display: flex;
-    gap: 12px;
-    margin-top: 10px;
+    gap: 14px;
+    margin-top: 12px;
     justify-content: flex-end;
 }
 
 .cancel-btn,
 .submit-btn {
-    padding: 11px 24px;
+    padding: 12px 26px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
@@ -112,26 +120,28 @@
 }
 
 .cancel-btn {
-    background: #e0e0e0;
-    color: #333;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .cancel-btn:hover {
-    background: #d0d0d0;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }
 
 .submit-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
 }
 
 .submit-btn:disabled {
-    opacity: 0.7;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -153,4 +163,21 @@
     .submit-btn {
         width: 100%;
     }
+}
+
+/* Logo preview in form */
+.logo-preview-small {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.logo-preview-small img {
+    max-width: 60px;
+    max-height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
 }

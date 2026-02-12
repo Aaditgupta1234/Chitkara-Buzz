@@ -1,11 +1,25 @@
 .header {
-    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B73FF 100%);
     color: white;
-    padding: 20px 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 12px 0;
+    box-shadow: 0 4px 30px rgba(102, 126, 234, 0.4);
     position: sticky;
     top: 0;
     z-index: 100;
+    animation: headerSlideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes headerSlideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .header-content {
@@ -21,78 +35,351 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo-section:hover {
+    transform: scale(1.03);
 }
 
 .logo {
-    width: 50px;
-    height: 50px;
-    background: white;
-    border-radius: 8px;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #fff, #f0f0ff);
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: logoFloat 3s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: logoShine 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+}
+
+@keyframes logoShine {
+
+    0%,
+    100% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+
+    50% {
+        transform: translateX(100%) rotate(45deg);
+    }
 }
 
 .logo svg {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
+    position: relative;
+    z-index: 1;
+}
+
+.logo svg rect {
+    stroke: #667eea;
+}
+
+.logo svg rect:last-child {
+    fill: #764ba2;
 }
 
 .logo-text h1 {
-    font-size: 28px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 800;
     margin: 0;
     letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to right, #fff, #ffecd2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .logo-text p {
-    font-size: 12px;
+    font-size: 10px;
     margin: 0;
     opacity: 0.9;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 3px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .nav {
     display: flex;
-    gap: 30px;
+    gap: 15px;
     align-items: center;
 }
 
-.nav a {
+.nav-link {
     color: white;
     text-decoration: none;
-    font-weight: 500;
-    transition: opacity 0.3s ease;
+    font-weight: 600;
     font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.nav a:hover {
-    opacity: 0.8;
-    text-decoration: underline;
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00d4ff, #7c3aed);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 2px;
 }
 
-.admin-btn {
-    background: rgba(255, 255, 255, 0.2);
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.nav-link:hover::before {
+    width: 60%;
+}
+
+/* Logged in badges */
+.logged-in-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 500;
+    animation: badgeBounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes badgeBounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    70% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.student-badge {
+    background: linear-gradient(135deg, #00d4ff, #0891b2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    animation: badgeBounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), badgeGlow 2s ease-in-out infinite;
+}
+
+@keyframes badgeGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 4px 30px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 212, 255, 0.3);
+    }
+}
+
+.admin-badge {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.5);
+    color: #1a1a2e;
+    animation: badgeBounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), adminGlow 2s ease-in-out infinite;
+}
+
+@keyframes adminGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(251, 191, 36, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 4px 30px rgba(251, 191, 36, 0.8), 0 0 40px rgba(251, 191, 36, 0.3);
+    }
+}
+
+.pulse-dot {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    animation: pulseDot 1.5s ease-in-out infinite;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.student-badge .pulse-dot {
+    background: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.admin-badge .pulse-dot {
+    background: #1a1a2e;
+    box-shadow: 0 0 10px rgba(26, 26, 46, 0.5);
+}
+
+@keyframes pulseDot {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.6;
+    }
+}
+
+.logged-text {
+    white-space: nowrap;
+}
+
+.logged-text strong {
+    font-weight: 700;
+}
+
+.logout-mini-btn,
+.admin-panel-btn {
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: inherit;
+}
+
+.logout-mini-btn:hover {
+    background: rgba(255, 82, 82, 0.9);
+    transform: rotate(90deg) scale(1.1);
     color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    padding: 8px 15px;
-    border-radius: 8px;
+}
+
+.admin-panel-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: rotate(180deg) scale(1.1);
+}
+
+/* Login buttons */
+.student-login-btn,
+.admin-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    padding: 10px 20px;
+    border-radius: 30px;
     cursor: pointer;
     font-weight: 600;
     font-size: 13px;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: inherit;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
 }
 
+.student-login-btn::before,
+.admin-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.student-login-btn:hover::before,
+.admin-btn:hover::before {
+    left: 100%;
+}
+
+.student-login-btn:hover,
 .admin-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: white;
-    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
-@media (max-width: 768px) {
+.student-login-btn:active,
+.admin-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.btn-icon {
+    font-size: 16px;
+    animation: iconBounce 2s ease-in-out infinite;
+}
+
+@keyframes iconBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+@media (max-width: 900px) {
     .header-content {
         flex-direction: column;
         gap: 15px;
@@ -100,11 +387,29 @@
     }
 
     .logo-text h1 {
-        font-size: 24px;
+        font-size: 20px;
     }
 
     .nav {
-        gap: 15px;
+        gap: 8px;
+        font-size: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .logged-in-badge {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    .student-login-btn,
+    .admin-btn {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .nav-link {
+        padding: 8px 10px;
         font-size: 12px;
     }
 }
